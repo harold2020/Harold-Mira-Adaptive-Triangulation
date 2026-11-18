@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1519">
+  <meta name="description" content="Harold's Triangulation Point Position Controller Adaptive System. Local single-file simulation with 1,000 reference points and save-state retries.">
+  <title>Harold's Triangulation Point Position Controller Adaptive System</title>
+  <style>
+:root{color-scheme:dark;--bg:#0b1519;--panel:#111e23;--panel2:#14242a;--border:#26383e;--muted:#91a7ad;--text:#eff5f3;--green:#b2f6a4;--cyan:#4bcbd1;--red:#ff775b;--amber:#f7cb73}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}button,input,select{font:inherit}button,a,input,select{ -webkit-tap-highlight-color:transparent}button,select,input{outline-offset:4px}button{cursor:pointer;border:0}button:disabled{opacity:.5;cursor:wait}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--green)}.app{max-width:1512px;margin:auto;padding:0 42px}header{display:flex;align-items:center;justify-content:space-between;padding:28px 0;border-bottom:1px solid var(--border)}.brand{display:flex;align-items:center;gap:12px;color:var(--text);font-size:10px;line-height:1.5;letter-spacing:1.8px;text-decoration:none}.brand b{font-size:10px;font-weight:500;color:var(--muted)}.brand-icon{background:var(--green);color:#13251e;font-weight:800;font-size:24px;letter-spacing:-3px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:12px}.brand-icon span{font-size:21px;padding-left:1px}.header-badges{display:flex;align-items:center;gap:22px}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #3a564b;border-radius:30px;padding:7px 11px;font-size:11px;color:var(--green);white-space:nowrap}.pill i,.live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px #b2f6a440}.subtle{color:var(--muted);font-size:9px;letter-spacing:1.4px}.intro{display:flex;justify-content:space-between;align-items:center;padding:40px 0 32px}.eyebrow{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:2px;margin-bottom:13px}h1{font-size:clamp(32px,3.1vw,47px);font-weight:500;line-height:1.12;letter-spacing:-1.8px;margin:0 0 15px}h1 span{color:var(--green)}.intro p{color:var(--muted);font-size:13px;line-height:1.7;margin:0}.intro-note{border-left:1px solid var(--border);padding-left:25px;max-width:290px}.tiny-label{font-size:9px;letter-spacing:1.6px;color:var(--green)}.intro-note p{padding-top:12px;font-size:12px;line-height:1.9}main{display:grid;grid-template-columns:minmax(0,1fr) 308px;gap:20px}.simulation-panel,.control-card,.telemetry-card,.event-card,.benchmark-card{background:var(--panel);border:1px solid var(--border);border-radius:15px;overflow:hidden}.view-heading{display:flex;justify-content:space-between;align-items:center;padding:15px 19px;font-size:10px;color:var(--muted);min-height:53px}.view-heading>div{display:flex;gap:9px;align-items:center}.view-heading b{font-size:9px;letter-spacing:1px;color:var(--text)}.divider{color:#4b6065;margin:0 2px}.text-button{background:none;color:var(--green);padding:5px;font-size:11px}.canvas-wrap{height:508px;position:relative;background:#0d1b1f;overflow:hidden}#track{display:block;width:100%;height:100%}.canvas-top{position:absolute;top:15px;left:18px;right:18px;display:flex;justify-content:space-between;pointer-events:none;font-size:8px;letter-spacing:1.1px;color:#a9bec0}.canvas-top>span:first-child{padding:5px 7px;background:#0c1b1fde;border:1px solid #30494b;border-radius:4px;color:#d4e8e4}.canvas-top>span:last-child{padding-top:7px}.legend{position:absolute;bottom:16px;left:18px;right:18px;display:flex;flex-wrap:wrap;gap:16px;pointer-events:none;background:#0a171ed9;width:fit-content;padding:9px 11px;border:1px solid #294045;border-radius:7px;font-size:9px;color:#c2d1d1}.legend span{display:flex;align-items:center;gap:6px}.legend i{height:5px;width:5px;border-radius:50%}.near{background:var(--red)}.mid{background:var(--amber)}.far{background:var(--cyan)}.route{background:var(--green)}.compass{position:absolute;right:15px;bottom:17px;font-size:7px;letter-spacing:1px;color:#7d999e;pointer-events:none}.compass span{font-size:15px;margin:0 5px}.playback{display:flex;align-items:center;padding:14px 18px;gap:18px;flex-wrap:wrap;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}.play-actions{display:flex;align-items:center;gap:8px}.primary,.secondary,.icon-button{padding:10px 14px;border-radius:7px;font-size:11px;font-weight:600;white-space:nowrap}.primary{background:var(--green);color:#16291d;min-width:91px}.primary:hover{background:#caffbf}.secondary{background:#1d3036;color:var(--text);border:1px solid #354a51}.secondary:hover{background:#294047}.icon-button{background:none;color:var(--muted);border:1px solid var(--border);font-size:18px;line-height:14px;padding:10px}.playback label{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:10px}.playback select{padding:6px 23px 6px 9px;min-width:59px;font-size:11px}.running-label{font-size:9px;color:var(--muted);margin-left:auto}.stats{display:grid;grid-template-columns:1.3fr 1fr 1fr 1.2fr;padding:21px 19px;gap:12px}.stats>div{border-right:1px solid var(--border);padding-left:10px}.stats>div:first-child{padding-left:0}.stats>div:last-child{border-right:0}.stats span{font-size:8px;letter-spacing:.7px;color:var(--muted);display:block;margin-bottom:9px}.stats strong{font-weight:500;font-size:24px;letter-spacing:-.7px;font-variant-numeric:tabular-nums}.stats strong small{font-weight:400;font-size:9px;letter-spacing:0;color:var(--muted)}.progress-row{display:flex;align-items:center;gap:13px;padding:0 19px 21px;color:var(--muted);font-size:9px}.progress-track{height:4px;flex:1;background:#263d40;border-radius:5px;overflow:hidden}.progress-track i{display:block;height:100%;background:var(--green);width:0;transition:width .2s}.progress-row>b{font-size:10px;font-weight:500;color:var(--green);min-width:28px}aside{display:flex;flex-direction:column;gap:16px}.control-card,.telemetry-card{padding:20px}.card-title{display:flex;align-items:center;gap:10px;margin-bottom:21px}.card-title>span{font-size:9px;color:var(--green);border:1px solid #3e5b4e;border-radius:4px;padding:3px 5px}h2{font-size:15px;font-weight:500;margin:0;letter-spacing:-.25px}.field{display:flex;flex-direction:column;gap:8px;color:var(--muted);font-size:10px;margin-bottom:16px}select,input[type=number]{width:100%;border:1px solid #344950;border-radius:6px;background:#0e1a1f;color:var(--text);padding:10px 12px;font-size:11px}select{cursor:pointer}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.range-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}.range-label b{color:var(--green);font-weight:500}input[type=range]{accent-color:var(--green);width:100%;margin:13px 0 4px;height:4px;cursor:pointer}.range-ends{display:flex;justify-content:space-between;font-size:8px;color:#738e96;margin-bottom:20px}.check-row{display:flex;gap:13px;margin-bottom:19px;font-size:9px;color:var(--muted)}.check-row label{display:flex;align-items:center;gap:4px;cursor:pointer}input[type=checkbox]{accent-color:var(--green);margin:0}.wide{width:100%}.control-card>.text-button{margin-top:8px;font-size:10px}.telemetry-card .card-title{margin-bottom:7px}.speed{display:flex;align-items:baseline;gap:6px;position:relative;margin-bottom:12px}.speed strong{font-size:39px;font-weight:400;letter-spacing:-1.5px;min-width:64px;font-variant-numeric:tabular-nums}.speed>span{font-size:10px;color:var(--muted)}#speedGraph{width:120px;height:35px;position:absolute;right:0;bottom:7px}dl{margin:0}dl>div{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #26383e77;font-size:10px}dt{color:var(--muted)}dd{margin:0;font-variant-numeric:tabular-nums;color:#dbece5}.small-note{font-size:10px;line-height:1.65;color:var(--muted);margin:13px 0 0}.rewind-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#15252bf0;border:1px solid #e8bd68;padding:23px;min-width:260px;border-radius:13px;text-align:center;box-shadow:0 10px 80px #0009}.rewind-overlay>span{display:block;color:var(--amber);font-size:33px}.rewind-overlay>b{font-size:15px;font-weight:500}.rewind-overlay>p{font-size:11px;line-height:1.6;color:var(--muted);margin-bottom:0}.lower-grid{display:grid;grid-template-columns:.85fr 1.3fr;gap:20px;margin-top:20px}.event-card,.benchmark-card{padding:23px}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}.section-heading .eyebrow{font-size:8px;margin-bottom:8px}.quiet{font-size:9px;color:var(--muted);border-color:#355057}.section-heading button{font-size:10px;padding:9px 12px}#events{list-style:none;padding:0;margin:18px 0 0;max-height:207px;overflow:auto}#events li{display:flex;gap:12px;padding:9px 0;border-top:1px solid #26383e80}#events .event-symbol{font-size:12px;color:var(--green);padding-top:2px;width:15px;flex-shrink:0}#events .crash .event-symbol,#events .stall .event-symbol{color:var(--red)}#events .adjust .event-symbol{color:var(--amber)}#events .event-content{flex:1}#events b{font-size:11px;font-weight:500}#events p{font-size:10px;color:var(--muted);margin:3px 0 0;line-height:1.5}#events time{color:#789096;font-size:9px;white-space:nowrap;margin-top:3px}.benchmark-status{font-size:11px;color:var(--green);border:1px dashed #3a504d;border-radius:7px;padding:15px;margin-top:18px;background:#12292055}.benchmark-footer{display:flex;justify-content:space-between;align-items:center;gap:5px;font-size:8px;color:var(--muted);margin-top:17px}.table-wrap{overflow-x:auto;margin-top:13px}table{border-collapse:collapse;width:100%;font-size:9px;text-align:left;white-space:nowrap}th{font-weight:500;color:var(--muted);font-size:8px;letter-spacing:.3px}th,td{padding:9px 5px;border-bottom:1px solid var(--border)}td small{color:var(--muted)}td.pass{color:var(--green)}td.fail{color:var(--red)}.method{margin-top:21px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}summary{list-style:none;cursor:pointer;padding:20px 0;color:#c0d3d2;font-size:11px;display:flex;justify-content:space-between}summary::-webkit-details-marker{display:none}summary>span{color:var(--green);font-size:17px}.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:0 0 23px}.method h3{font-size:12px;font-weight:500;margin:15px 0 6px}.method p{font-size:11px;color:var(--muted);line-height:1.8;margin:0}footer{display:flex;justify-content:space-between;padding:26px 0 32px;font-size:8px;letter-spacing:1px;color:#70888d}footer span:last-child{letter-spacing:0}[hidden]{display:none!important}@media(min-width:1500px){.canvas-wrap{height:564px}}@media(max-width:1100px){.app{padding:0 24px}main{grid-template-columns:minmax(0,1fr) 280px}.intro-note{max-width:245px}.canvas-wrap{height:480px}.compass{display:none}.running-label{display:none}.stats{gap:5px;padding-left:15px;padding-right:15px}.stats strong{font-size:21px}.stats span{font-size:7px}.stats strong small{font-size:8px}.stats>div{padding-left:7px}.lower-grid{grid-template-columns:1fr 1.2fr}.control-card,.telemetry-card{padding:17px}}@media(max-width:820px){.header-badges .subtle{display:none}.intro{padding:30px 0 25px}.intro-note{display:none}h1{font-size:38px}main{grid-template-columns:1fr}aside{display:grid;grid-template-columns:1fr 1fr;align-items:start}.canvas-wrap{height:480px}.lower-grid{grid-template-columns:1fr}.stats span{font-size:8px}.stats strong{font-size:24px}.running-label{display:inline}.telemetry-card{height:100%}.method-grid{gap:25px}.intro p{font-size:12px}}@media(max-width:500px){.app{padding:0 14px}header{padding:19px 0}.brand{font-size:8px;gap:8px}.brand b{font-size:8px}.brand-icon{width:34px;height:34px;font-size:20px}.pill{font-size:9px;padding:6px 8px}.intro .eyebrow{font-size:8px;letter-spacing:1.4px}h1{font-size:33px;letter-spacing:-1.1px}.intro p{font-size:11px}.view-heading{padding:12px;font-size:8px}.view-heading>div{gap:5px}.view-heading b{font-size:8px}.view-heading .text-button{font-size:9px}.canvas-wrap{height:410px}.canvas-top{top:10px;left:10px;right:10px;font-size:7px;letter-spacing:.4px}.canvas-top>span:last-child{display:none}.legend{left:10px;bottom:11px;right:10px;font-size:8px;gap:11px;padding:7px}.playback{padding:12px;gap:10px}.playback label{margin-left:auto}.running-label{display:none}.stats{padding:17px 12px;grid-template-columns:1.1fr 1fr 1fr 1.1fr}.stats span{font-size:6px;letter-spacing:.2px;line-height:1.5}.stats strong{font-size:20px}.stats strong small{display:block;font-size:8px;margin-top:2px}.stats>div{padding-left:6px}.progress-row{padding:0 12px 17px;font-size:8px}aside{grid-template-columns:1fr;gap:16px}.telemetry-card .speed{margin-bottom:8px}.speed strong{font-size:34px}dl>div{font-size:11px}.event-card,.benchmark-card{padding:17px}.section-heading .eyebrow{font-size:7px;letter-spacing:1.3px}.section-heading h2{font-size:14px}.section-heading button{font-size:9px;padding:9px}.benchmark-footer{font-size:7px}.method-grid{grid-template-columns:1fr;gap:4px}footer{font-size:7px;gap:15px;line-height:1.6}footer span:last-child{max-width:150px;text-align:right}}
+
+.live-readout{position:absolute;right:18px;top:48px;padding:7px 9px;border:1px solid #3b5350;border-radius:5px;background:#0b1a1fdf;color:#d3e7da;font-size:9px;letter-spacing:.25px;pointer-events:none}.simulation-panel{align-self:start}.icon-button{font-size:11px;line-height:16px;padding:9px 11px}@media(max-width:500px){.live-readout{right:10px;top:41px;font-size:8px;padding:6px}.playback{gap:8px}.playback label{margin-left:0}.play-actions{gap:6px}.playback .secondary{padding:10px}.playback .primary{min-width:75px}}
+
+.intro h1{font-size:clamp(27px,2.7vw,40px);letter-spacing:-1.1px}.intro-note{flex-shrink:0}footer>span:first-child{max-width:65%}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <a class="brand" href="#" aria-label="Harold's engineering lab"><span class="brand-icon">H<span>•</span></span><span>HAROLD’S<br><b>ENGINEERING LAB</b></span></a>
+    <div class="header-badges"><span class="pill"><i></i> Local simulation</span><span class="subtle">ONE CAR · OFFLINE · JUST FOR FUN</span></div>
+  </header>
+  <section class="intro">
+    <div><div class="eyebrow">ONE CAR / 1,000 REFERENCE POINTS / SAVE-STATE RETRIES</div><h1>Harold’s Triangulation<br><span>Point Position Controller</span><br>Adaptive System</h1><p>Measure the walls. Find a reachable opening. Rewind and adjust when a trial fails.</p></div>
+    <div class="intro-note"><span class="tiny-label">YOUR DESIGN, IN MOTION</span><p>Near points set urgency.<br>Far points give preview.<br>Speed and steering set what’s possible.</p></div>
+  </section>
+  <main>
+    <section class="simulation-panel" aria-label="Driving simulation">
+      <div class="view-heading"><div><span class="live-dot"></span><b id="viewStatus">DRIVING</b><span class="divider">/</span><span id="trackLabel">Technical circuit · seed 17</span></div><button id="camera" class="text-button" aria-pressed="true">Full track</button></div>
+      <div class="canvas-wrap"><canvas id="track" aria-label="Top-down track with one car, visible wall points, its intended path, and saved checkpoints"></canvas>
+        <div class="canvas-top"><span id="pointBadge">1,000 SENSOR RAYS</span><span>60 Hz physics · 10 Hz decisions</span></div>
+        <div id="sceneMetrics" class="live-readout">65% grip · 0.0s trial · 0 hits</div>
+        <div id="rewindOverlay" class="rewind-overlay" hidden><span>↶</span><b id="rewindTitle">Restoring save state</b><p id="rewindText"></p></div>
+        <div class="legend"><span><i class="near"></i> Near / urgent</span><span><i class="mid"></i> Midrange</span><span><i class="far"></i> Far / preview</span><span><i class="route"></i> Intended arc</span></div>
+        <div class="compass">+ Y <span>↘</span> TOP-DOWN VIEW</div>
+      </div>
+      <div class="playback"><div class="play-actions"><button id="play" class="primary">Pause</button><button id="step" class="secondary" title="Pause and advance one simulated second">Step +1s</button><button id="reset" class="icon-button" title="Restart this track and clear all learned adjustments" aria-label="Restart and clear adjustments">Reset</button></div><label>Playback <select id="playback"><option value="1">1×</option><option value="4" selected>4×</option><option value="12">12×</option></select></label><span class="running-label" id="runningLabel">Actual simulation · auto-running</span></div>
+      <div class="stats">
+        <div><span>FIRST CLEAN LAP</span><strong id="firstLap">—<small> in progress</small></strong></div>
+        <div><span>CONTACT CRASHES</span><strong id="crashes">0</strong></div>
+        <div><span id="retryCounterLabel">SAVE-STATE RELOADS</span><strong id="retries">0</strong></div>
+        <div><span>TOTAL TRIAL TIME</span><strong id="trialTime">0.0<small> sim s</small></strong></div>
+      </div>
+      <div class="progress-row"><span id="lapLabel">Continuous clean lap</span><div class="progress-track"><i id="lapProgress"></i></div><b id="lapPercent">0%</b></div>
+    </section>
+    <aside>
+      <section class="control-card"><div class="card-title"><span>01</span><h2>Set the experiment</h2></div>
+        <label class="field">Track layout<select id="layout"><option value="flow">Flowing circuit</option><option value="technical" selected>Technical circuit</option><option value="obstacles">Obstacle circuit</option></select></label>
+        <div class="field-row"><label class="field">Track seed<input id="seed" type="number" min="1" max="999999" value="17"></label><label class="field">Reference rays<select id="points"><option value="64">64</option><option value="256">256</option><option value="1000" selected>1,000</option></select></label></div>
+        <label class="range-label" for="cruise">Initial speed cap <b id="cruiseLabel">101 km/h</b></label><input id="cruise" type="range" min="12" max="42" value="28" step="1"><div class="range-ends"><span>43 km/h</span><span>151 km/h</span></div>
+        <label class="field">Handling conditions<select id="grip"><option value="1">Nominal grip · known handling</option><option value="0.65" selected>Reduced grip · 65% of initial estimate</option></select></label>
+        <label class="field">On a failed trial<select id="retryMode"><option value="checkpoint">Reload an earlier save state</option><option value="restart">Restart at the track start</option></select></label>
+        <div class="check-row"><label><input type="checkbox" id="rays" checked> Show sensing rays</label><label><input type="checkbox" id="trail" checked> Show trail</label></div>
+        <button id="apply" class="wide secondary">Apply & start fresh →</button><button id="newTrack" class="wide text-button">Try a new layout seed</button>
+      </section>
+      <section class="telemetry-card"><div class="card-title"><span>02</span><h2>Live telemetry</h2></div>
+        <div class="speed"><strong id="speed">0</strong><span>km/h</span><canvas id="speedGraph" aria-label="Recent speed history"></canvas></div>
+        <dl><div><dt>Steering</dt><dd id="steering">0°</dd></div><div><dt>Reachable arc ahead</dt><dd id="clearance">— m</dd></div><div><dt>Pace after adjustments</dt><dd id="pace">100%</dd></div><div><dt>Stopped-trial retries</dt><dd id="stalls">0</dd></div><div><dt>Average sense + decide</dt><dd id="compute">— ms</dd></div><div><dt>Simulation world time</dt><dd id="worldTime">0.0 s</dd></div></dl>
+        <p class="small-note">Trial time includes discarded attempts. World time rewinds with the saved state.</p>
+      </section>
+    </aside>
+  </main>
+  <div class="lower-grid">
+    <section class="event-card"><div class="section-heading"><div><div class="eyebrow">OBSERVE THE ADJUSTMENTS</div><h2>What just happened</h2></div><span id="lapCount" class="pill quiet">0 clean laps</span></div><ol id="events" aria-label="Simulation events"></ol></section>
+    <section class="benchmark-card"><div class="section-heading"><div><div class="eyebrow">MEASURE, DON’T ASSUME</div><h2>Save state vs. full restart</h2></div><button id="benchmark" class="secondary">Run 6-track test</button></div>
+      <p class="small-note">Same car, sensors, physics, and crash adjustments. Only the restore location changes. Each trial gets 180 simulated seconds. Uses your selected speed, grip, and point count.</p>
+      <div id="benchmarkStatus" class="benchmark-status">Run the test to measure time to a continuous clean lap.</div>
+      <div id="benchmarkTable" class="table-wrap" hidden></div><div class="benchmark-footer"><span>Local comparison · same controller, different restore location.</span><button id="download" class="text-button" hidden>Download results ↓</button></div>
+    </section>
+  </div>
+  <details class="method"><summary>How this simulation tests your idea <span>+</span></summary><div class="method-grid"><div><h3>What the car receives</h3><p>Up to 1,000 ray-cast wall distances across a 270° field of view, plus its own speed and steering. Walls block the rays. No centerline or future track layout is passed to the controller.</p><h3>How it steers</h3><p>Nearby points influence a wider range of directions. The controller finds an opening, compares short steering arcs, and limits speed for visible clearance, braking strength, and turning ability.</p><h3>Handling challenge</h3><p>In reduced-grip mode, actual braking and lateral grip are 65% of the controller’s initial nominal estimate. This deliberate mismatch tests recovery. Failures are produced by the physics, not scripted. Nominal-grip mode removes that mismatch.</p></div><div><h3>What a retry changes</h3><p>A contact crash or four-second stop restores an earlier snapshot. Each failure multiplies the pace by 0.83 (floor 0.28), adds 0.10 m clearance (cap 0.65 m), and adds preview. Repeated failures at one location rewind farther. These are explicit rules, not a trained neural model.</p><h3>What this does not establish</h3><p>This is a simplified 2D physics test with perfect range measurements and static walls. Screenshot recognition and real sensors are outside this toy simulation. A green arc is an intended path, not a safety guarantee.</p></div></div></details>
+  <footer><span>HAROLD’S TRIANGULATION POINT POSITION CONTROLLER ADAPTIVE SYSTEM</span><span>One car. Observable decisions. Reproducible trials.</span></footer>
+</div>
+<script id="controller-engine">
+// Harold's Triangulation Point Position Controller Adaptive System.
+// Standalone local edition: open the HTML file directly. All source is editable.
+// Deterministic, dependency-free toy simulator. Controller inputs are ranges and
+// vehicle state; the evaluator's centerline is never passed to the controller.
+const DT = 1 / 60;
+const CONTROL_EVERY = 6;
+const VEHICLE = Object.freeze({length:3.8, width:1.8, wheelbase:2.5,
+  maxSteer:0.52, steerRate:1.65, accel:4.2, brake:8, lateralAccel:8.8});
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const wrap = x => Math.atan2(Math.sin(x), Math.cos(x));
+function rng(seed) { let a=seed>>>0; return () => { a+=0x6D2B79F5; let t=a; t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
+function segmentDistance(px,py,a,b) {
+  const dx=b.x-a.x,dy=b.y-a.y;
+  const t=clamp(((px-a.x)*dx+(py-a.y)*dy)/(dx*dx+dy*dy||1),0,1);
+  return Math.hypot(px-a.x-t*dx,py-a.y-t*dy);
+}
+function intersect(a,b,c,d) {
+  const dx=b.x-a.x,dy=b.y-a.y,ex=d.x-c.x,ey=d.y-c.y;
+  const den=dx*ey-dy*ex; if(Math.abs(den)<1e-10)return false;
+  const qx=c.x-a.x,qy=c.y-a.y;
+  const t=(qx*ey-qy*ex)/den,u=(qx*dy-qy*dx)/den;
+  return t>=0&&t<=1&&u>=0&&u<=1;
+}
+function inPolygon(p,poly) {
+  let inside=false;
+  for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+    const a=poly[i],b=poly[j];
+    if((a.y>p.y)!=(b.y>p.y)&&p.x<(b.x-a.x)*(p.y-a.y)/(b.y-a.y)+a.x)inside=!inside;
+  }return inside;
+}
+function makeTrack(kind='flow',seed=17) {
+  const random=rng(seed), phase=random()*Math.PI*2;
+  const center=[],n=128,width=kind==='technical'?13:kind==='obstacles'?15:16;
+  for(let i=0;i<n;i++){
+    const a=i/n*Math.PI*2;
+    let modulation=1;
+    if(kind==='technical')modulation+=0.125*Math.sin(3*a+phase)+0.055*Math.cos(5*a-phase);
+    else modulation+=0.035*Math.sin(3*a+phase);
+    const x=80*modulation*Math.cos(a),y=49*modulation*Math.sin(a);
+    center.push({x,y});
+  }
+  const inner=[],outer=[],segments=[],obstacles=[];
+  for(let i=0;i<n;i++){
+    const prev=center[(i+n-1)%n],next=center[(i+1)%n];
+    const dx=next.x-prev.x,dy=next.y-prev.y,l=Math.hypot(dx,dy),nx=-dy/l,ny=dx/l;
+    const w=width/2;
+    inner.push({x:center[i].x+nx*w,y:center[i].y+ny*w});
+    outer.push({x:center[i].x-nx*w,y:center[i].y-ny*w});
+  }
+  for(const p of [inner,outer])for(let i=0;i<n;i++)segments.push([p[i],p[(i+1)%n]]);
+  if(kind==='obstacles'){
+    for(let j=0;j<5;j++){
+      const i=(19+j*23+Math.floor(random()*4))%n,p=center[i],q=center[(i+1)%n];
+      const yaw=Math.atan2(q.y-p.y,q.x-p.x),c=Math.cos(yaw),s=Math.sin(yaw);
+      const offset=(j%2===0?1:-1)*3.4,poly=[];
+      for(const [u,v] of [[-2.2,-1.6],[2.2,-1.6],[2.2,1.6],[-2.2,1.6]])
+        poly.push({x:p.x+c*u-s*(v+offset),y:p.y+s*u+c*(v+offset)});
+      obstacles.push(poly);
+      for(let k=0;k<4;k++)segments.push([poly[k],poly[(k+1)%4]]);
+    }
+  }
+  const cumulative=[0];
+  for(let i=0;i<n;i++)cumulative.push(cumulative[i]+Math.hypot(center[(i+1)%n].x-center[i].x,center[(i+1)%n].y-center[i].y));
+  const flat=new Float64Array(segments.length*4);
+  segments.forEach(([a,b],i)=>flat.set([a.x,a.y,b.x-a.x,b.y-a.y],i*4));
+  const yaw=Math.atan2(center[1].y-center[0].y,center[1].x-center[0].x);
+  return {kind,seed,width,center,inner,outer,segments,flat,obstacles,cumulative,
+    length:cumulative[n],spawn:{x:center[0].x,y:center[0].y,yaw,v:0,steer:0,time:0,progress:0},
+    bounds:{minX:-110,maxX:110,minY:-80,maxY:80}};
+}
+function scan(track,state,count=1000,maxRange=85) {
+  const fov=Math.PI*1.5,angles=new Float64Array(count),ranges=new Float64Array(count);
+  const c=Math.cos(state.yaw),s=Math.sin(state.yaw);
+  // Sensor at vehicle center. The planner inflates every return for body clearance.
+  for(let i=0;i<count;i++){
+    const a=-fov/2+i/(count-1)*fov,dx=c*Math.cos(a)-s*Math.sin(a),dy=s*Math.cos(a)+c*Math.sin(a);
+    let best=maxRange;
+    for(let j=0;j<track.flat.length;j+=4){
+      const ax=track.flat[j]-state.x,ay=track.flat[j+1]-state.y,ex=track.flat[j+2],ey=track.flat[j+3];
+      const den=dx*ey-dy*ex;
+      if(Math.abs(den)<1e-9)continue;
+      const t=(ax*ey-ay*ex)/den;
+      if(t<0||t>=best)continue;
+      const u=(ax*dy-ay*dx)/den;
+      if(u>=0&&u<=1)best=t;
+    }
+    angles[i]=a;ranges[i]=best;
+  }
+  return {angles,ranges,count,maxRange,fov,pose:{x:state.x,y:state.y,yaw:state.yaw}};
+}
+// No track, centerline, lap progress, seed or future state enters this function.
+function drive(observation,state,experience,options) {
+  const {ranges,angles,count,fov}=observation,step=fov/(count-1);
+  const clearance=VEHICLE.width/2+0.55+experience.extraMargin;
+  const inflated=Float64Array.from(ranges);
+  // Every wall sample has a distance-dependent angular footprint. Close samples
+  // affect a wider set of possible directions: the user's priority rule.
+  for(let i=0;i<count;i++){
+    const d=ranges[i],span=Math.ceil(Math.asin(clamp(clearance/Math.max(d,clearance),0,1))/step);
+    const safe=Math.max(0,d-clearance);
+    for(let j=Math.max(0,i-span);j<=Math.min(count-1,i+span);j++)if(safe<inflated[j])inflated[j]=safe;
+  }
+  // Look ahead through the cloud. Select the middle of the deepest broad opening.
+  const limit=Math.floor(1.35/step),mid=(count-1)/2;
+  let deepest=0;
+  for(let i=Math.ceil(mid-limit);i<=Math.floor(mid+limit);i++)deepest=Math.max(deepest,inflated[i]);
+  const threshold=Math.max(4,deepest*0.82);
+  let bestScore=-Infinity,bestIndex=Math.round(mid),start=-1;
+  for(let i=Math.ceil(mid-limit);i<=Math.floor(mid+limit)+1;i++){
+    const open=i<count&&i<=Math.floor(mid+limit)&&inflated[i]>=threshold;
+    if(open&&start<0)start=i;
+    if(!open&&start>=0){
+      const end=i-1,index=Math.round((start+end)/2),angle=angles[index];
+      const score=(end-start+1)*step+0.45*Math.cos(angle)-0.1*Math.abs(angle-experience.lastTarget);
+      if(score>bestScore){bestScore=score;bestIndex=index;}
+      start=-1;
+    }
+  }
+  let target=angles[bestIndex];
+  target=0.7*target+0.3*experience.lastTarget;
+  experience.lastTarget=target;
+  const lookahead=clamp(4+state.v*(0.7+experience.previewBoost),5,21);
+  const aimDistance=Math.min(Math.max(4,inflated[bestIndex]*0.7),lookahead);
+  const gapSteer=clamp(Math.atan2(2*VEHICLE.wheelbase*Math.sin(target),aimDistance),-VEHICLE.maxSteer,VEHICLE.maxSteer);
+  // Compare short reachable steering arcs against the measured cloud. A nearby
+  // wall beside the car must not veto a safe turn merely because it is close.
+  const horizon=clamp(8+state.v*(1.25+experience.previewBoost),10,44);
+  function arcClearance(steer){
+    const k=Math.tan(steer)/VEHICLE.wheelbase;
+    for(let d=0.6;d<=horizon;d+=0.6){
+      if(Math.abs(k*d)>1.65)return d;
+      const x=Math.abs(k)<1e-5?d:Math.sin(k*d)/k,y=Math.abs(k)<1e-5?0:(1-Math.cos(k*d))/k;
+      const a=Math.atan2(y,x),index=clamp(Math.round((a+fov/2)/step),0,count-1);
+      if(Math.hypot(x,y)>inflated[index])return Math.max(0,d-0.6);
+    }return horizon;
+  }
+  let steer=gapSteer,freeArc=arcClearance(steer),arcScore=freeArc-2.5*Math.abs(steer-gapSteer);
+  for(let j=0;j<=30;j++){
+    const candidate=-VEHICLE.maxSteer+2*VEHICLE.maxSteer*j/30,free=arcClearance(candidate);
+    const score=free-2.5*Math.abs(candidate-gapSteer)-0.3*Math.abs(candidate-state.steer);
+    if(score>arcScore){arcScore=score;steer=candidate;freeArc=free;}
+  }
+  const curve=Math.abs(Math.tan(steer)/VEHICLE.wheelbase);
+  const turnSpeed=Math.sqrt(VEHICLE.lateralAccel/Math.max(curve,0.008));
+  // Braking uses visible clearance along the forward corridor and the car's
+  // control authority, rather than just distance to the nearest side wall.
+  let forward=observation.maxRange;
+  for(let i=0;i<count;i++)if(Math.abs(angles[i])<0.075)forward=Math.min(forward,inflated[i]);
+  const stopSpace=Math.max(0,freeArc-VEHICLE.length*0.55-state.v*0.15);
+  const brakeSpeed=Math.sqrt(2*VEHICLE.brake*stopSpace);
+  const targetSpeed=Math.min(options.cruise*experience.pace,turnSpeed*experience.pace,brakeSpeed*experience.pace);
+  const accel=targetSpeed<state.v?-VEHICLE.brake:VEHICLE.accel;
+  // Diagnostic path: intended kinematic arc, never a precomputed racing line.
+  const path=[],k=Math.tan(steer)/VEHICLE.wheelbase,len=Math.min(lookahead,inflated[bestIndex]);
+  for(let d=0;d<=len;d+=0.75){
+    const x=Math.abs(k)<1e-5?d:Math.sin(k*d)/k,y=Math.abs(k)<1e-5?0:(1-Math.cos(k*d))/k;
+    path.push({x:state.x+Math.cos(state.yaw)*x-Math.sin(state.yaw)*y,
+      y:state.y+Math.sin(state.yaw)*x+Math.cos(state.yaw)*y});
+  }
+  return {steer,targetSpeed,accel,target,lookahead,forward,path,inflated,clearance,freeArc};
+}
+function carPolygon(state) {
+  const c=Math.cos(state.yaw),s=Math.sin(state.yaw),poly=[];
+  for(const [x,y] of [[1.9,-0.9],[1.9,0.9],[-1.9,0.9],[-1.9,-0.9]])poly.push({x:state.x+c*x-s*y,y:state.y+s*x+c*y});
+  return poly;
+}
+function collision(track,state) {
+  const poly=carPolygon(state);
+  for(const [a,b] of track.segments){
+    // Only nearby rail segments can intersect the body.
+    if(segmentDistance(state.x,state.y,a,b)>2.3)continue;
+    if(inPolygon(a,poly)||inPolygon(b,poly))return true;
+    for(let i=0;i<4;i++)if(intersect(poly[i],poly[(i+1)%4],a,b))return true;
+  }
+  return inPolygon({x:state.x,y:state.y},track.inner)||!inPolygon({x:state.x,y:state.y},track.outer)||track.obstacles.some(p=>inPolygon(state,p));
+}
+function progressAt(track,state) {
+  let best=Infinity,along=0;
+  for(let i=0;i<track.center.length;i++){
+    const a=track.center[i],b=track.center[(i+1)%track.center.length],dx=b.x-a.x,dy=b.y-a.y,l2=dx*dx+dy*dy;
+    const t=clamp(((state.x-a.x)*dx+(state.y-a.y)*dy)/l2,0,1);
+    const d=(state.x-a.x-t*dx)**2+(state.y-a.y-t*dy)**2;
+    if(d<best){best=d;along=track.cumulative[i]+Math.sqrt(l2)*t;}
+  }return along;
+}
+class Simulation {
+  constructor(options={}) {
+    this.options={kind:'technical',seed:17,points:1000,cruise:28,grip:1,checkpoints:true,rewind:2.5,...options};
+    this.track=makeTrack(this.options.kind,this.options.seed);
+    this.state={...this.track.spawn};
+    this.experience=options.experience?{...options.experience,lastTarget:0}:{pace:1,extraMargin:0,previewBoost:0,lastTarget:0};
+    this.history=[];this.events=[];this.ghost=[];this.trail=[];this.ticks=0;this.trialTime=0;
+    this.crashes=0;this.stalls=0;this.retries=0;this.cleanDistance=0;this.cleanLaps=0;this.firstCleanAt=null;this.firstCleanWallMs=null;
+    this.distance=0;this.status='driving';this.restorePending=null;this.rewoundSeconds=0;this.controlMs=0;this.controlCalls=0;
+    this.lastProgress=0;this.lastCheckpoint=0;this.cleanLapStart=0;this.bestCleanLap=null;
+    this.startWall=typeof performance!=='undefined'?performance.now():Date.now();
+    this.event('start','Driving','Fresh car. No stored racing line.');
+    this.sense();this.saveCheckpoint(true);
+  }
+  event(type,title,detail){this.events.unshift({type,title,detail,at:this.trialTime,world:this.state.time});this.events=this.events.slice(0,50);}
+  sense(){
+    const begin=performance.now();
+    this.observation=scan(this.track,this.state,this.options.points);
+    this.command=drive(this.observation,this.state,this.experience,this.options);
+    this.controlMs+=performance.now()-begin;this.controlCalls++;
+  }
+  saveCheckpoint(force=false){
+    if(!force&&(this.state.time-this.lastCheckpoint<0.4||this.state.v<1))return;
+    this.history.push({state:{...this.state},target:this.experience.lastTarget,lastProgress:this.lastProgress});
+    this.lastCheckpoint=this.state.time;
+    const cutoff=this.state.time-20;
+    this.history=this.history.filter(h=>h.state.time>=cutoff);
+  }
+  crash(reason='Wall contact'){
+    if(reason==='Wall contact')this.crashes++;else this.stalls++;
+    this.retries++;this.cleanDistance=0;this.cleanLapStart=this.trialTime;
+    this.ghost=this.trail.slice(-180);this.crashState={...this.state};
+    let checkpoint={state:{...this.track.spawn},target:0,lastProgress:0};
+    if(this.options.checkpoints){
+      const samePlace=this.lastFailure&&Math.hypot(this.state.x-this.lastFailure.x,this.state.y-this.lastFailure.y)<9;
+      this.repeatedFailures=samePlace?(this.repeatedFailures||0)+1:0;
+      const stoppedFor=reason==='No progress'?4:0;
+      const desired=this.state.time-stoppedFor-this.options.rewind*(1+0.65*this.repeatedFailures);
+      checkpoint=this.history.findLast(h=>h.state.time<=desired)||this.history[0]||checkpoint;
+    }
+    this.lastFailure={x:this.state.x,y:this.state.y};
+    const oldPace=this.experience.pace;
+    this.experience.pace=Math.max(0.28,this.experience.pace*0.83);
+    this.experience.extraMargin=Math.min(0.65,this.experience.extraMargin+0.10);
+    this.experience.previewBoost=Math.min(0.9,this.experience.previewBoost+0.15);
+    const rewind=this.state.time-checkpoint.state.time;
+    this.rewoundSeconds+=rewind;
+    this.restorePending=checkpoint;this.status='rewinding';
+    this.event(reason==='Wall contact'?'crash':'stall',reason,`${(this.crashState.v*3.6).toFixed(0)} km/h · restore ${rewind.toFixed(1)} s earlier`);
+    this.event('adjust','Adjustment retained',`Pace ${Math.round(oldPace*100)}% → ${Math.round(this.experience.pace*100)}%; more preview and clearance.`);
+  }
+  restore(){
+    if(!this.restorePending)return;
+    const checkpoint=this.restorePending;
+    this.state={...checkpoint.state};this.lastProgress=checkpoint.lastProgress;
+    this.experience.lastTarget=checkpoint.target;
+    this.history=this.history.filter(h=>h.state.time<=this.state.time);
+    this.lastCheckpoint=this.state.time;
+    this.trail=[];this.restorePending=null;this.status='driving';this.ticks=0;this.stoppedTicks=0;
+    this.event('restore',this.options.checkpoints?'Save state restored':'Restarted at start','Game state rewound. Crash adjustment kept.');
+    this.sense();
+  }
+  step(){
+    if(this.status==='rewinding')this.restore();
+    if(this.ticks%CONTROL_EVERY===0)this.sense();
+    const s=this.state,cmd=this.command;
+    s.steer+=clamp(cmd.steer-s.steer,-VEHICLE.steerRate*DT,VEHICLE.steerRate*DT);
+    const delta=clamp(cmd.targetSpeed-s.v,-VEHICLE.brake*this.options.grip*DT,VEHICLE.accel*DT);
+    s.v=clamp(s.v+delta,0,50);
+    const desiredYawRate=s.v*Math.tan(s.steer)/VEHICLE.wheelbase;
+    // Lateral-acceleration limit creates understeer above tire capability.
+    const actualLateral=VEHICLE.lateralAccel*this.options.grip;
+    const yawRate=clamp(desiredYawRate,-actualLateral/Math.max(s.v,0.5),actualLateral/Math.max(s.v,0.5));
+    s.yaw=wrap(s.yaw+yawRate*DT);s.x+=Math.cos(s.yaw)*s.v*DT;s.y+=Math.sin(s.yaw)*s.v*DT;
+    s.time+=DT;this.trialTime+=DT;this.distance+=s.v*DT;this.ticks++;
+    if(this.ticks%4===0){this.trail.push({x:s.x,y:s.y});if(this.trail.length>900)this.trail.shift();}
+    if(collision(this.track,s)){this.crash();return;}
+    const p=progressAt(this.track,s);let d=p-this.lastProgress;
+    if(d<-this.track.length/2)d+=this.track.length;
+    if(d>this.track.length/2)d-=this.track.length;
+    // Lap evaluator only. This information is not available to drive().
+    this.cleanDistance=Math.max(0,this.cleanDistance+d);s.progress+=d;this.lastProgress=p;
+    if(this.cleanDistance>=this.track.length){
+      this.cleanDistance-=this.track.length;this.cleanLaps++;
+      const elapsed=this.trialTime-this.cleanLapStart;
+      this.bestCleanLap=this.bestCleanLap===null?elapsed:Math.min(this.bestCleanLap,elapsed);
+      this.cleanLapStart=this.trialTime;
+      if(this.firstCleanAt===null){this.firstCleanAt=this.trialTime;this.firstCleanWallMs=performance.now()-this.startWall;}
+      this.event('lap','Clean lap completed',`${elapsed.toFixed(1)} simulated seconds · ${this.crashes} crashes so far`);
+    }
+    this.saveCheckpoint();
+    if(this.trialTime>12&&s.v<0.1){this.stoppedTicks=(this.stoppedTicks||0)+1;if(this.stoppedTicks>240){this.crash('No progress');this.stoppedTicks=0;}}
+    else this.stoppedTicks=0;
+  }
+  result(){return {kind:this.options.kind,seed:this.options.seed,points:this.options.points,checkpoints:this.options.checkpoints,
+    cruise:this.options.cruise,grip:this.options.grip,firstCleanAt:this.firstCleanAt,crashes:this.crashes,stalls:this.stalls,retries:this.retries,trialSeconds:this.trialTime,
+    cleanLaps:this.cleanLaps,pace:this.experience.pace,rewoundSeconds:this.rewoundSeconds,
+    averageControlMs:this.controlCalls?this.controlMs/this.controlCalls:0};}
+}
+function runTrial(options={},limit=150){
+  const sim=new Simulation(options),begin=performance.now();
+  while(sim.trialTime<limit&&sim.firstCleanAt===null)sim.step();
+  return {...sim.result(),computeMs:performance.now()-begin};
+}
+
+</script>
+<script id="simulation-interface">
+const $=id=>document.getElementById(id),canvas=$('track'),ctx=canvas.getContext('2d');
+const names={flow:'Flowing circuit',technical:'Technical circuit',obstacles:'Obstacle circuit'};
+let sim,playing=true,follow=true,accumulator=0,lastFrame=performance.now(),holdUntil=0,seenRetries=0;
+let eventSignature='',lastUI=0,graphHistory=[],benchmarkResults=null,benchmarkWorker=null;
+const colors={near:'#ff775b',mid:'#f7cb73',far:'#4bcbd1'};
+function selected(){return {kind:$('layout').value,seed:clamp(Number($('seed').value)||17,1,999999),points:Number($('points').value),cruise:Number($('cruise').value),grip:Number($('grip').value),checkpoints:$('retryMode').value==='checkpoint'};}
+function start(){
+  sim=new Simulation(selected());window.haroldSimulation=sim;
+  $('seed').value=sim.options.seed;playing=true;accumulator=0;holdUntil=0;seenRetries=0;eventSignature='';graphHistory=[];
+  $('rewindOverlay').hidden=true;$('play').textContent='Pause';
+  $('trackLabel').textContent=`${names[sim.options.kind]} · seed ${sim.options.seed}`;
+  $('pointBadge').textContent=`${sim.options.points.toLocaleString()} SENSOR RAYS`;
+  $('retryCounterLabel').textContent=sim.options.checkpoints?'SAVE-STATE RELOADS':'FULL RESTARTS';
+  if(sim.options.grip<1)sim.event('challenge','Reduced-grip challenge','Actual grip is 65% of the initial nominal estimate. No scripted crashes.');
+  updateUI();
+}
+function setPlaying(value){playing=value;$('play').textContent=playing?'Pause':'Resume';accumulator=0;updateUI();}
+$('play').addEventListener('click',()=>setPlaying(!playing));
+$('reset').addEventListener('click',start);$('apply').addEventListener('click',start);
+$('step').addEventListener('click',()=>{setPlaying(false);$('rewindOverlay').hidden=true;holdUntil=0;for(let i=0;i<60;i++)sim.step();seenRetries=sim.retries;updateUI();});
+$('newTrack').addEventListener('click',()=>{$('seed').value=(Number($('seed').value)+137)%999999||1;start();});
+$('cruise').addEventListener('input',()=>{$('cruiseLabel').textContent=`${Math.round(Number($('cruise').value)*3.6)} km/h`;});
+$('camera').addEventListener('click',()=>{follow=!follow;$('camera').textContent=follow?'Full track':'Follow car';$('camera').setAttribute('aria-pressed',String(follow));});
+document.addEventListener('visibilitychange',()=>{lastFrame=performance.now();accumulator=0;});
+document.addEventListener('keydown',event=>{if(event.code==='Space'&&!['INPUT','SELECT','BUTTON'].includes(document.activeElement.tagName)){event.preventDefault();setPlaying(!playing);}});
+function resizeCanvas(c){const r=c.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);if(c.width!==Math.round(r.width*dpr)||c.height!==Math.round(r.height*dpr)){c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);}return {w:r.width,h:r.height,dpr};}
+function polygon(c,points){c.beginPath();points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.closePath();}
+function line(c,points){if(!points.length)return;c.beginPath();points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.stroke();}
+function drawTrack(c,track,scale,small=false){
+  c.fillStyle='#27383e';polygon(c,track.outer);c.fill();
+  c.fillStyle='#112623';polygon(c,track.inner);c.fill();
+  c.strokeStyle=small?'#74918f':'#688184';c.lineWidth=(small?1:1.2)/scale;
+  polygon(c,track.outer);c.stroke();polygon(c,track.inner);c.stroke();
+  if(!small){
+    c.strokeStyle='#42605c';c.lineWidth=.65;c.setLineDash([1.5,1.5]);polygon(c,track.inner);c.stroke();c.setLineDash([]);
+    for(const obstacle of track.obstacles){c.fillStyle='#6b7470';polygon(c,obstacle);c.fill();c.strokeStyle='#d7bf7c';c.lineWidth=.3;c.stroke();}
+    c.save();c.translate(track.spawn.x,track.spawn.y);c.rotate(track.spawn.yaw);
+    for(let j=-4;j<4;j++)for(let k=0;k<2;k++){c.fillStyle=(j+k)%2?'#d4ded3':'#27383e';c.fillRect(-.3+k*.6,j*1.5,.6,1.5);}c.restore();
+  }
+}
+function draw(){
+  const {w,h,dpr}=resizeCanvas(canvas),s=sim.state,track=sim.track;
+  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+  let scale=follow?Math.min(w/90,h/70):Math.min((w-30)/220,(h-46)/160);
+  const cx=follow?s.x+Math.cos(s.yaw)*10:0,cy=follow?s.y+Math.sin(s.yaw)*10:0;
+  ctx.save();ctx.translate(w/2,h/2);ctx.scale(scale,scale);ctx.translate(-cx,-cy);
+  ctx.fillStyle='#0d1b1f';ctx.fillRect(cx-w/scale/2,cy-h/scale/2,w/scale,h/scale);
+  ctx.strokeStyle='#2b444428';ctx.lineWidth=.6/scale;ctx.beginPath();
+  for(let x=Math.floor((cx-w/scale/2)/10)*10;x<cx+w/scale/2;x+=10){ctx.moveTo(x,cy-h/scale/2);ctx.lineTo(x,cy+h/scale/2);}
+  for(let y=Math.floor((cy-h/scale/2)/10)*10;y<cy+h/scale/2;y+=10){ctx.moveTo(cx-w/scale/2,y);ctx.lineTo(cx+w/scale/2,y);}ctx.stroke();
+  drawTrack(ctx,track,scale);
+  if($('trail').checked){
+    ctx.lineWidth=.45;ctx.lineJoin='round';ctx.strokeStyle='#f2786366';line(ctx,sim.ghost);
+    ctx.strokeStyle='#c5e8dd65';ctx.lineWidth=.3;line(ctx,sim.trail);
+  }
+  const obs=sim.observation,origin=obs.pose,points={near:[],mid:[],far:[]},urgent=5+s.v*.65;
+  for(let i=0;i<obs.count;i++){
+    const d=obs.ranges[i];if(d>=obs.maxRange-.001)continue;
+    const a=origin.yaw+obs.angles[i],p={x:origin.x+Math.cos(a)*d,y:origin.y+Math.sin(a)*d};
+    points[d<urgent?'near':d<urgent+18?'mid':'far'].push(p);
+  }
+  for(const category of ['far','mid','near']){
+    const list=points[category];
+    if($('rays').checked){ctx.beginPath();for(const p of list){ctx.moveTo(origin.x,origin.y);ctx.lineTo(p.x,p.y);}ctx.strokeStyle=colors[category]+(category==='near'?'27':'13');ctx.lineWidth=.55/scale;ctx.stroke();}
+    ctx.beginPath();for(const p of list){ctx.moveTo(p.x+.95/scale,p.y);ctx.arc(p.x,p.y,.95/scale,0,Math.PI*2);}ctx.fillStyle=colors[category];ctx.fill();
+  }
+  const checkpoint=sim.history.findLast(p=>p.state.time<=s.time-sim.options.rewind)||sim.history[0];
+  if(checkpoint&&sim.options.checkpoints){
+    const p=checkpoint.state;ctx.fillStyle='#b2f6a4';ctx.strokeStyle='#b2f6a466';ctx.lineWidth=.4;ctx.beginPath();ctx.arc(p.x,p.y,1.6,0,Math.PI*2);ctx.stroke();
+    ctx.font=`${8/scale}px ui-sans-serif,system-ui`;ctx.textAlign='center';ctx.fillText('SAVE',p.x,p.y-2.6);
+  }
+  ctx.strokeStyle='#b2f6a4';ctx.lineWidth=.5;ctx.lineJoin='round';line(ctx,sim.command.path);
+  if(sim.command.path.length>2){
+    const p=sim.command.path.at(-1),q=sim.command.path.at(-2),a=Math.atan2(p.y-q.y,p.x-q.x);
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(a);ctx.fillStyle='#b2f6a4';ctx.beginPath();ctx.moveTo(1.2,0);ctx.lineTo(-.7,-.8);ctx.lineTo(-.7,.8);ctx.closePath();ctx.fill();ctx.restore();
+  }
+  if(sim.status==='rewinding'&&sim.crashState){ctx.strokeStyle='#ff775b';ctx.lineWidth=.4;ctx.beginPath();ctx.arc(sim.crashState.x,sim.crashState.y,3.5,0,Math.PI*2);ctx.stroke();}
+  // Actual rectangular body, matching the collision model.
+  ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.yaw);
+  ctx.shadowColor='#ff775b66';ctx.shadowBlur=8;ctx.fillStyle='#ef765e';ctx.beginPath();ctx.roundRect(-1.9,-.9,3.8,1.8,.3);ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='#09202a';ctx.fillRect(-1.1,-.64,1.55,1.28);ctx.fillStyle='#ecf0dc';ctx.fillRect(.5,-.13,1.2,.26);ctx.fillRect(-1.8,-.13,.6,.26);
+  ctx.fillStyle='#0b1115';for(const x of [-1.2,1.1])for(const y of [-1.03,.83])ctx.fillRect(x-.4,y,.8,.2);
+  ctx.fillStyle='#fff7be';ctx.fillRect(1.65,-.75,.15,.35);ctx.fillRect(1.65,.4,.15,.35);ctx.restore();
+  ctx.restore();
+  if(follow&&w>400){
+    const mw=140,mh=105,mx=w-mw-14,my=h-mh-56;
+    ctx.save();ctx.fillStyle='#0a161de8';ctx.strokeStyle='#385253';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(mx,my,mw,mh,8);ctx.fill();ctx.stroke();
+    const ms=Math.min((mw-12)/220,(mh-18)/160);ctx.translate(mx+mw/2,my+mh/2+4);ctx.scale(ms,ms);drawTrack(ctx,track,ms,true);
+    ctx.fillStyle='#b2f6a4';ctx.beginPath();ctx.arc(s.x,s.y,3/ms,0,Math.PI*2);ctx.fill();ctx.restore();
+    ctx.fillStyle='#97b4b5';ctx.font='7px system-ui';ctx.fillText('TRACK VIEW',mx+10,my+12);
+  }
+}
+function updateGraph(){
+  const c=$('speedGraph'),g=c.getContext('2d'),{w,h,dpr}=resizeCanvas(c);
+  graphHistory.push(sim.state.v);if(graphHistory.length>100)graphHistory.shift();
+  g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,w,h);
+  if(graphHistory.length<2)return;g.beginPath();graphHistory.forEach((v,i)=>{const x=i/99*w,y=h-3-v/42*(h-6);i?g.lineTo(x,y):g.moveTo(x,y);});g.strokeStyle='#b2f6a4';g.lineWidth=1.4;g.stroke();
+}
+function updateUI(){
+  const s=sim.state,percentage=clamp(sim.cleanDistance/sim.track.length*100,0,100);
+  $('speed').textContent=Math.round(s.v*3.6);$('steering').textContent=`${(s.steer*180/Math.PI).toFixed(1)}°`;
+  $('clearance').textContent=`${sim.command.freeArc.toFixed(1)} m`;$('pace').textContent=`${Math.round(sim.experience.pace*100)}%`;
+  $('stalls').textContent=sim.stalls;$('crashes').textContent=sim.crashes;$('retries').textContent=sim.retries;
+  $('sceneMetrics').textContent=`${Math.round(sim.options.grip*100)}% grip · ${sim.trialTime.toFixed(1)}s trial · ${sim.crashes} hit${sim.crashes===1?'':'s'} · ${Math.round(sim.experience.pace*100)}% pace`;
+  $('trialTime').innerHTML=`${sim.trialTime.toFixed(1)}<small> sim s</small>`;$('worldTime').textContent=`${s.time.toFixed(1)} s`;
+  $('compute').textContent=`${(sim.controlMs/Math.max(1,sim.controlCalls)).toFixed(2)} ms`;
+  $('firstLap').innerHTML=sim.firstCleanAt===null?'—<small> in progress</small>':`${sim.firstCleanAt.toFixed(1)}<small> sim s</small>`;
+  $('lapProgress').style.width=`${percentage}%`;$('lapPercent').textContent=`${Math.floor(percentage)}%`;
+  $('lapCount').textContent=`${sim.cleanLaps} clean lap${sim.cleanLaps===1?'':'s'}`;
+  $('viewStatus').textContent=sim.status==='rewinding'?'RELOADING':playing?'DRIVING':'PAUSED';
+  $('runningLabel').textContent=playing?'Actual simulation · running':'Paused · Space to resume';
+  const signature=`${sim.events[0]?.at}-${sim.events[0]?.type}-${sim.events.length}`;
+  if(signature!==eventSignature){
+    eventSignature=signature;$('events').replaceChildren();
+    for(const e of sim.events.slice(0,10)){
+      const li=document.createElement('li');li.className=e.type;
+      const symbol=document.createElement('span');symbol.className='event-symbol';symbol.textContent=({start:'→',challenge:'◇',lap:'✓',crash:'×',stall:'!',restore:'↶',adjust:'↗'})[e.type]||'·';
+      const content=document.createElement('div');content.className='event-content';
+      const title=document.createElement('b');title.textContent=e.title;
+      const detail=document.createElement('p');detail.textContent=e.detail;
+      content.append(title,detail);const time=document.createElement('time');time.textContent=`${e.at.toFixed(1)}s`;
+      li.append(symbol,content,time);$('events').append(li);
+    }
+  }
+  updateGraph();
+}
+function frame(now){
+  const elapsed=Math.min((now-lastFrame)/1000,.08);lastFrame=now;
+  if(playing&&now>=holdUntil){
+    $('rewindOverlay').hidden=true;accumulator+=elapsed*Number($('playback').value);
+    const start=performance.now();
+    while(accumulator>=DT&&performance.now()-start<23){
+      sim.step();accumulator-=DT;
+      if(sim.retries>seenRetries){
+        seenRetries=sim.retries;holdUntil=now+850;accumulator=0;
+        $('rewindOverlay').hidden=false;
+        $('rewindTitle').textContent=sim.events.find(e=>e.type==='crash'||e.type==='stall')?.title||'Trial failed';
+        $('rewindText').textContent=`Reloading ${(sim.state.time-sim.restorePending.state.time).toFixed(1)} seconds earlier. Pace adjusted to ${Math.round(sim.experience.pace*100)}%.`;
+        break;
+      }
+    }
+    accumulator=Math.min(accumulator,.8);
+  }
+  draw();if(now-lastUI>100){updateUI();lastUI=now;}requestAnimationFrame(frame);
+}
+function renderBenchmark(data){
+  const rows=data.rows,successful=rows.filter(r=>r.result.firstCleanAt!==null);
+  const complete=rows.length===12;
+  $('benchmarkStatus').textContent=complete?`${successful.length}/12 trials completed a clean lap. ${data.options.points.toLocaleString()} rays · ${Math.round(data.options.grip*100)}% grip · ${Math.round(data.options.cruise*3.6)} km/h initial cap.`:`Testing ${rows.length}/12 trials… The live car is paused.`;
+  const container=$('benchmarkTable');container.hidden=false;
+  const table=document.createElement('table');table.innerHTML='<thead><tr><th>TRACK / SEED</th><th>SAVE STATE</th><th>FULL RESTART</th></tr></thead>';
+  const body=document.createElement('tbody');
+  for(let i=0;i<6;i++){
+    const a=rows[i*2],b=rows[i*2+1];if(!a)continue;
+    const tr=document.createElement('tr'),name=document.createElement('td');name.textContent=`${names[a.kind].replace(' circuit','')} / ${a.seed}`;tr.append(name);
+    for(const row of [a,b]){
+      const td=document.createElement('td');
+      if(!row){td.textContent='Testing…';}
+      else{const r=row.result;td.className=r.firstCleanAt===null?'fail':'pass';td.textContent=r.firstCleanAt===null?'No lap by 180s':`${r.firstCleanAt.toFixed(1)}s`;const small=document.createElement('small');small.textContent=` · ${r.crashes} hit${r.crashes===1?'':'s'}, ${r.stalls} stop${r.stalls===1?'':'s'}`;td.append(small);}tr.append(td);
+    }body.append(tr);
+  }table.append(body);container.replaceChildren(table);
+  if(complete){benchmarkResults=data;$('download').hidden=false;}
+}
+$('benchmark').addEventListener('click',async()=>{
+  if(benchmarkWorker)return;
+  benchmarkWorker=true;
+  setPlaying(false);
+  const options=selected(),rows=[];
+  const cases=[['flow',17],['flow',154],['technical',17],['technical',154],['obstacles',17],['obstacles',154]];
+  const report={options,limitSimSeconds:180,description:"Harold's adaptive triangulation: checkpoint resume versus full restart, using the same controller and vehicle.",rows};
+  $('benchmark').disabled=true;
+  $('benchmark').textContent='Testing…';
+  $('benchmarkStatus').textContent='Running local trials…';
+  try {
+    // Yield between trials so this single-file version needs no server or worker.
+    await new Promise(resolve=>setTimeout(resolve,20));
+    for(const [kind,seed] of cases)for(const checkpoints of [true,false]){
+      rows.push({kind,seed,checkpoints,result:runTrial({...options,kind,seed,checkpoints},180)});
+      renderBenchmark({type:'progress',...report});
+      await new Promise(resolve=>setTimeout(resolve,20));
+    }
+    renderBenchmark({type:'complete',...report});
+  } catch(error) {
+    $('benchmarkStatus').textContent=`Test could not complete: ${error.message}`;
+  } finally {
+    benchmarkWorker=null;
+    $('benchmark').disabled=false;
+    $('benchmark').textContent='Run 6-track test';
+  }
+});
+$('download').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify(benchmarkResults,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='harolds-adaptive-triangulation-results.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+start();requestAnimationFrame(frame);
+
+</script>
+</body></html>
